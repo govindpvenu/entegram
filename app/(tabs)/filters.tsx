@@ -37,6 +37,12 @@ const FILTER_OPTIONS = [
     title: "Hide Stories",
     description: "Off by default so stories stay usable unless you opt in.",
   },
+  {
+    key: "lockSharedReels",
+    title: "Lock Shared Reels",
+    description:
+      "Allows reels opened from DMs, but blocks vertical swiping into more reels.",
+  },
 ] satisfies readonly {
   description: string;
   key: keyof Filters;
@@ -90,8 +96,8 @@ export default function FiltersScreen() {
             lineHeight: 22,
           }}
         >
-          DMs stay accessible. Stories remain visible until you explicitly hide
-          them.
+          DMs stay accessible. Shared reels can be locked to a single post.
+          Stories remain visible until you explicitly hide them.
         </Text>
       </View>
 

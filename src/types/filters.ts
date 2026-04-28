@@ -4,6 +4,7 @@ export type Filters = {
   hideHomeFeed: boolean;
   hideSuggestions: boolean;
   hideStories: boolean;
+  lockSharedReels: boolean;
 };
 
 export const DEFAULT_FILTERS: Filters = {
@@ -12,4 +13,5 @@ export const DEFAULT_FILTERS: Filters = {
   hideHomeFeed: true,
   hideSuggestions: true,
   hideStories: false,
+  lockSharedReels: true,
 };

@@ -39,6 +39,10 @@ function mergeStoredFilters(value: unknown): Filters | null {
       typeof candidate.hideStories === "boolean"
         ? candidate.hideStories
         : DEFAULT_FILTERS.hideStories,
+    lockSharedReels:
+      typeof candidate.lockSharedReels === "boolean"
+        ? candidate.lockSharedReels
+        : DEFAULT_FILTERS.lockSharedReels,
     hideSuggestions:
       typeof candidate.hideSuggestions === "boolean"
         ? candidate.hideSuggestions

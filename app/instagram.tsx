@@ -8,6 +8,7 @@ import { useFilters } from "@/src/context/FilterContext";
 import { buildInstagramFilterScript } from "@/src/utils/buildInstagramFilterScript";
 
 const INSTAGRAM_URL = "https://www.instagram.com/";
+const SHARED_REEL_LOCK_MESSAGE = "entegram.sharedReelLock";
 
 function LoadingState({ label }: { label: string }) {
   return (
@@ -97,11 +98,13 @@ export default function InstagramScreen() {
   const webViewRef = React.useRef<WebView | null>(null);
   const { filters, isHydrated } = useFilters();
   const [loadError, setLoadError] = React.useState<string | null>(null);
+  const [isSharedReelLocked, setIsSharedReelLocked] = React.useState(false);
   const [webViewKey, setWebViewKey] = React.useState(0);
   const injectedScript = buildInstagramFilterScript(filters);
 
   function handleRetry() {
     setLoadError(null);
+    setIsSharedReelLocked(false);
     setWebViewKey((current) => current + 1);
   }
 
@@ -121,6 +124,7 @@ export default function InstagramScreen() {
         ref={webViewRef}
         domStorageEnabled
         injectedJavaScript={injectedScript}
+        injectedJavaScriptBeforeContentLoaded={injectedScript}
         javaScriptEnabled
         onError={(event) => {
           const description =
@@ -138,7 +142,19 @@ export default function InstagramScreen() {
         onLoadStart={() => {
           setLoadError(null);
         }}
+        onMessage={(event) => {
+          try {
+            const message = JSON.parse(event.nativeEvent.data);
+
+            if (message?.type === SHARED_REEL_LOCK_MESSAGE) {
+              setIsSharedReelLocked(Boolean(message.isLocked));
+            }
+          } catch {
+            // Ignore unrelated messages from the page.
+          }
+        }}
         renderLoading={() => <LoadingState label="Loading Instagram..." />}
+        scrollEnabled={!isSharedReelLocked}
         setSupportMultipleWindows={false}
         sharedCookiesEnabled
         source={{ uri: INSTAGRAM_URL }}
