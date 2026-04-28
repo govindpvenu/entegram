@@ -1,5 +1,4 @@
 import * as React from "react";
-import ClipboardModule from "react-native/Libraries/Components/Clipboard/Clipboard";
 
 import {
   ActivityIndicator,
@@ -7,6 +6,7 @@ import {
   ScrollView,
   Text,
   TextInput,
+  TurboModuleRegistry,
   View,
 } from "react-native";
 
@@ -17,9 +17,20 @@ import {
   maskLockInPassword,
 } from "@/src/utils/lock-in";
 
-const Clipboard = ClipboardModule as unknown as {
+type ClipboardModule = {
+  getConstants?: () => Record<string, never>;
   setString: (content: string) => void;
 };
+
+function copyStringToClipboard(value: string) {
+  const Clipboard = TurboModuleRegistry.get<ClipboardModule>("Clipboard");
+
+  if (!Clipboard) {
+    throw new Error("Clipboard native module is unavailable.");
+  }
+
+  Clipboard.setString(value);
+}
 
 function LoadingState() {
   return (
@@ -272,8 +283,13 @@ export default function LockInScreen() {
       return;
     }
 
-    Clipboard.setString(value);
-    setCopyLabel("Copied");
+    try {
+      copyStringToClipboard(value);
+      setCopyLabel("Copied");
+    } catch (error) {
+      console.warn("Clipboard copy failed", error);
+      setCopyLabel("Copy failed");
+    }
   }
 
   function handleGenerateSetupPassword() {
