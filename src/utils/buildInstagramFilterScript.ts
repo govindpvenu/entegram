@@ -10,7 +10,10 @@ export function buildInstagramFilterScript(filters: Filters): string {
       const TOUCH_STATE_KEY = "__entegramTouchState";
       const REEL_LOCK_STATE_KEY = "__entegramReelLockState";
       const NAVIGATION_PATCHED_KEY = "__entegramNavigationPatched";
+      const HOME_FEED_PREHIDE_ATTRIBUTE = "data-entegram-prehide-home-feed";
       const SUGGESTION_TEXTS = ["Suggested for you", "Suggestions for you"];
+      const HOME_FEED_SELECTOR = 'div[class="html-div xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x9f619 xf68679 x5lhr3w xjbqb8w x78zum5 x15mokao x1ga7v0g x16uus16 xbiv7yw x1uhb9sk x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1"]';
+      const HOME_FEED_CLASS_NAMES = "html-div xdj266r x14z9mp xat24cr x1lziwak xexx8yu xyri2b x18d9i69 x1c1uobl x9f619 xf68679 x5lhr3w xjbqb8w x78zum5 x15mokao x1ga7v0g x16uus16 xbiv7yw x1uhb9sk x1plvlek xryxfnj x1c4vz4f x2lah0s xdt5ytf xqjyukv x1qjc9v5 x1oa3qoh x1nhvcw1".split(" ");
       const SHARED_REEL_MARKER_KEY = "entegram.sharedReelPending";
       const SHARED_REEL_MARKER_VALUE = "1";
       const DIRECT_INTERACTION_MARKER_KEY = "entegram.directInteractionAt";
@@ -22,6 +25,13 @@ export function buildInstagramFilterScript(filters: Filters): string {
 
       function getWindowState() {
         return window;
+      }
+
+      function isInstagramHost() {
+        return (
+          location.hostname === "instagram.com" ||
+          location.hostname.endsWith(".instagram.com")
+        );
       }
 
       function isDirectPath(pathname) {
@@ -549,6 +559,7 @@ export function buildInstagramFilterScript(filters: Filters): string {
         }
 
         const scheduleApply = function() {
+          syncHomeFeedPrehideState();
           clearTimeout(windowState[TIMER_KEY]);
           windowState[TIMER_KEY] = setTimeout(applyFilters, 80);
         };
@@ -592,8 +603,116 @@ export function buildInstagramFilterScript(filters: Filters): string {
 
       function shouldHideHomeFeed() {
         return Boolean(
-          filterConfig.hideHomeFeed && hasAuthenticatedShell() && isHomeTimeline()
+          isInstagramHost() &&
+          filterConfig.hideHomeFeed && !isAuthPage() && isHomeTimeline()
         );
+      }
+
+      function shouldPrehideHomeFeed() {
+        return Boolean(
+          isInstagramHost() &&
+          filterConfig.hideHomeFeed &&
+          !isAuthPage() &&
+          isHomeTimeline()
+        );
+      }
+
+      function syncHomeFeedPrehideState() {
+        if (shouldPrehideHomeFeed()) {
+          document.documentElement.setAttribute(HOME_FEED_PREHIDE_ATTRIBUTE, "true");
+          return;
+        }
+
+        document.documentElement.removeAttribute(HOME_FEED_PREHIDE_ATTRIBUTE);
+      }
+
+      function restoreHomeFeedTargets() {
+        const hiddenNodes = document.querySelectorAll(
+          '[data-entegram-home-feed="true"]'
+        );
+
+        hiddenNodes.forEach((node) => {
+          if (!(node instanceof HTMLElement)) {
+            return;
+          }
+
+          node.style.removeProperty("display");
+          node.removeAttribute("data-entegram-home-feed");
+        });
+      }
+
+      function isStoryTrayElement(element) {
+        if (
+          !(element instanceof HTMLElement) ||
+          element.matches('[data-pagelet="story_tray"]') ||
+          element.closest('[data-pagelet="story_tray"]') ||
+          element.querySelector('[data-pagelet="story_tray"]')
+        ) {
+          return true;
+        }
+
+        return false;
+      }
+
+      function hideHomeFeedTarget(target) {
+        if (!(target instanceof HTMLElement) || isStoryTrayElement(target)) {
+          return false;
+        }
+
+        target.setAttribute("data-entegram-home-feed", "true");
+        target.style.setProperty("display", "none", "important");
+        return true;
+      }
+
+      function findHomeFeedContainerByClassNames() {
+        const exactMatch = document.querySelector(HOME_FEED_SELECTOR);
+
+        if (exactMatch instanceof HTMLElement) {
+          return exactMatch;
+        }
+
+        const candidates = Array.from(document.querySelectorAll("main div"));
+
+        return candidates.find((node) => {
+          if (!(node instanceof HTMLElement) || isStoryTrayElement(node)) {
+            return false;
+          }
+
+          return HOME_FEED_CLASS_NAMES.every((className) =>
+            node.classList.contains(className)
+          );
+        });
+      }
+
+      function syncHomeFeed() {
+        syncHomeFeedPrehideState();
+
+        if (!document.body) {
+          return;
+        }
+
+        if (!shouldHideHomeFeed()) {
+          if (!filterConfig.hideHomeFeed || !isInstagramHost()) {
+            restoreHomeFeedTargets();
+          }
+
+          return;
+        }
+
+        const articleElement = findHomeFeedContainerByClassNames();
+
+        if (
+          articleElement instanceof HTMLElement &&
+          hideHomeFeedTarget(articleElement.parentElement)
+        ) {
+          return;
+        }
+
+        const feedArticles = Array.from(document.querySelectorAll("main article"));
+
+        feedArticles.forEach((article) => {
+          hideHomeFeedTarget(article);
+        });
       }
 
       function buildCssRules() {
@@ -620,10 +739,11 @@ export function buildInstagramFilterScript(filters: Filters): string {
           );
         }
 
-        if (shouldHideHomeFeed()) {
+        if (filterConfig.hideHomeFeed) {
           rules.push(
-            "/* Keep Instagram navigation intact but remove the home timeline after the authenticated shell is present. */",
-            "main article { display: none !important; }"
+            "/* Hide the home feed before the DOM observer can mark exact targets. */",
+            'html[' + HOME_FEED_PREHIDE_ATTRIBUTE + '="true"] main article { display: none !important; }',
+            'html[' + HOME_FEED_PREHIDE_ATTRIBUTE + '="true"] ' + HOME_FEED_SELECTOR + ' { display: none !important; }'
           );
         }
 
@@ -810,7 +930,13 @@ export function buildInstagramFilterScript(filters: Filters): string {
       }
 
       function applyFilters() {
+        if (!isInstagramHost()) {
+          return;
+        }
+
+        syncHomeFeedPrehideState();
         upsertStyle();
+        syncHomeFeed();
 
         if (filterConfig.hideReels) {
           hideTextMatches("Reels");
@@ -838,6 +964,7 @@ export function buildInstagramFilterScript(filters: Filters): string {
         }
 
         const scheduleApply = function() {
+          syncHomeFeedPrehideState();
           clearTimeout(windowWithState[TIMER_KEY]);
           windowWithState[TIMER_KEY] = setTimeout(applyFilters, 80);
         };
@@ -845,6 +972,10 @@ export function buildInstagramFilterScript(filters: Filters): string {
         const observer = new MutationObserver(scheduleApply);
         observer.observe(document.body, { childList: true, subtree: true });
         windowWithState[OBSERVER_KEY] = observer;
+      }
+
+      if (!isInstagramHost()) {
+        return true;
       }
 
       applyFilters();

@@ -108,6 +108,14 @@ export default function InstagramScreen() {
     setWebViewKey((current) => current + 1);
   }
 
+  React.useEffect(() => {
+    if (!isHydrated) {
+      return;
+    }
+
+    webViewRef.current?.injectJavaScript(injectedScript);
+  }, [injectedScript, isHydrated]);
+
   if (!isHydrated) {
     return <LoadingState label="Loading your filters..." />;
   }
