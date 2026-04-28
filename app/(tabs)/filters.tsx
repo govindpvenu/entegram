@@ -9,6 +9,7 @@ import {
 } from "react-native";
 
 import { useFilters } from "@/src/context/FilterContext";
+import { useLockIn } from "@/src/context/LockInContext";
 import type { Filters } from "@/src/types/filters";
 
 const FILTER_OPTIONS = [
@@ -51,8 +52,16 @@ const FILTER_OPTIONS = [
 
 export default function FiltersScreen() {
   const { filters, isHydrated, setFilter } = useFilters();
+  const {
+    isHydrated: isLockHydrated,
+    isLockConfigured,
+    isProtectedFilterChange,
+    isUnlocked,
+  } = useLockIn();
 
-  if (!isHydrated) {
+  const isLockActive = isLockConfigured && !isUnlocked;
+
+  if (!isHydrated || !isLockHydrated) {
     return (
       <View
         style={{
@@ -65,7 +74,7 @@ export default function FiltersScreen() {
       >
         <ActivityIndicator color="#6b7280" size="large" />
         <Text style={{ color: "#6b7280", fontSize: 14 }}>
-          Loading saved filters...
+          Loading saved settings...
         </Text>
       </View>
     );
@@ -101,55 +110,114 @@ export default function FiltersScreen() {
         </Text>
       </View>
 
-      {FILTER_OPTIONS.map((option) => (
+      {isLockConfigured ? (
         <View
-          key={option.key}
           style={{
-            backgroundColor: "#ffffff",
-            borderColor: "#e5e7eb",
+            backgroundColor: isLockActive ? "#fff7ed" : "#ecfdf5",
+            borderColor: isLockActive ? "#fdba74" : "#a7f3d0",
             borderCurve: "continuous",
             borderRadius: 18,
             borderWidth: 1,
-            gap: 10,
+            gap: 6,
             padding: 16,
           }}
         >
-          <View
+          <Text
             style={{
-              alignItems: "center",
-              flexDirection: "row",
-              gap: 12,
-              justifyContent: "space-between",
+              color: isLockActive ? "#9a3412" : "#065f46",
+              fontSize: 15,
+              fontWeight: "700",
             }}
           >
-            <View style={{ flex: 1, gap: 4 }}>
-              <Text
-                style={{
-                  color: "#111827",
-                  fontSize: 16,
-                  fontWeight: "600",
-                }}
-              >
-                {option.title}
-              </Text>
-              <Text
-                style={{
-                  color: "#6b7280",
-                  fontSize: 13,
-                  lineHeight: 20,
-                }}
-              >
-                {option.description}
-              </Text>
-            </View>
-
-            <Switch
-              onValueChange={(value) => setFilter(option.key, value)}
-              value={filters[option.key]}
-            />
-          </View>
+            {isLockActive ? "LockIn is active" : "LockIn is unlocked"}
+          </Text>
+          <Text
+            style={{
+              color: isLockActive ? "#9a3412" : "#047857",
+              fontSize: 13,
+              lineHeight: 20,
+            }}
+          >
+            {isLockActive
+              ? "Enabled filters cannot be turned off until you unlock them from the LockIn tab."
+              : "Enabled filters can be turned off right now. Relock from the LockIn tab when you are done."}
+          </Text>
         </View>
-      ))}
+      ) : null}
+
+      {FILTER_OPTIONS.map((option) => {
+        const currentValue = filters[option.key];
+        const isToggleDisabled = isProtectedFilterChange(currentValue, false);
+
+        return (
+          <View
+            key={option.key}
+            style={{
+              backgroundColor: "#ffffff",
+              borderColor: "#e5e7eb",
+              borderCurve: "continuous",
+              borderRadius: 18,
+              borderWidth: 1,
+              gap: 10,
+              opacity: isToggleDisabled ? 0.72 : 1,
+              padding: 16,
+            }}
+          >
+            <View
+              style={{
+                alignItems: "center",
+                flexDirection: "row",
+                gap: 12,
+                justifyContent: "space-between",
+              }}
+            >
+              <View style={{ flex: 1, gap: 4 }}>
+                <Text
+                  style={{
+                    color: "#111827",
+                    fontSize: 16,
+                    fontWeight: "600",
+                  }}
+                >
+                  {option.title}
+                </Text>
+                <Text
+                  style={{
+                    color: "#6b7280",
+                    fontSize: 13,
+                    lineHeight: 20,
+                  }}
+                >
+                  {option.description}
+                </Text>
+                {isToggleDisabled ? (
+                  <Text
+                    style={{
+                      color: "#b45309",
+                      fontSize: 12,
+                      fontWeight: "600",
+                    }}
+                  >
+                    Unlock from LockIn to disable this filter.
+                  </Text>
+                ) : null}
+              </View>
+
+              <Switch
+                disabled={isToggleDisabled}
+                onValueChange={(value) => {
+                  if (isProtectedFilterChange(currentValue, value)) {
+                    return;
+                  }
+
+                  setFilter(option.key, value);
+                }}
+                value={currentValue}
+              />
+            </View>
+          </View>
+        );
+      })}
     </ScrollView>
   );
 }

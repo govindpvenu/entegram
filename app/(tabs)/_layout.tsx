@@ -30,6 +30,15 @@ export default function TabLayout() {
           ),
         }}
       />
+      <Tabs.Screen
+        name="lock-in"
+        options={{
+          title: "LockIn",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons color={color} name="lock-closed-outline" size={size} />
+          ),
+        }}
+      />
     </Tabs>
   );
 }
