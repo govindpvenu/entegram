@@ -9,7 +9,7 @@ export default function RootLayout() {
       <FilterProvider>
         <Stack>
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="instagram" options={{ title: "Instagram" }} />
+          <Stack.Screen name="instagram" options={{ headerShown: false }} />
         </Stack>
       </FilterProvider>
     </LockInProvider>

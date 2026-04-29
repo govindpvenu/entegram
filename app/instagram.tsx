@@ -7,6 +7,7 @@ import {
 } from "@react-navigation/native";
 import type { NavigationAction } from "@react-navigation/routers";
 import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import {
   ActivityIndicator,
   BackHandler,
@@ -15,12 +16,14 @@ import {
   Text,
   View,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import WebView from "react-native-webview";
 
 import { useFilters } from "@/src/context/FilterContext";
 import { buildInstagramFilterScript } from "@/src/utils/buildInstagramFilterScript";
 
 const INSTAGRAM_URL = "https://www.instagram.com/";
+const INSTAGRAM_STATUS_BAR_BACKGROUND = "#0b1020";
 const SHARED_REEL_LOCK_MESSAGE = "entegram.sharedReelLock";
 const WEBVIEW_NAVIGATION_MESSAGE = "entegram.webviewNavigation";
 
@@ -181,6 +184,27 @@ function ErrorState({
   );
 }
 
+function ScreenSafeArea({ children }: { children: React.ReactNode }) {
+  return (
+    <>
+      <StatusBar
+        backgroundColor={INSTAGRAM_STATUS_BAR_BACKGROUND}
+        style="light"
+        translucent={false}
+      />
+      <SafeAreaView
+        edges={["top"]}
+        style={{
+          backgroundColor: INSTAGRAM_STATUS_BAR_BACKGROUND,
+          flex: 1,
+        }}
+      >
+        {children}
+      </SafeAreaView>
+    </>
+  );
+}
+
 export default function InstagramScreen() {
   const webViewRef = React.useRef<WebView | null>(null);
   const navigation = useNavigation();
@@ -330,19 +354,27 @@ export default function InstagramScreen() {
   }, [injectedScript, isHydrated]);
 
   if (!isHydrated) {
-    return <LoadingState label="Loading your filters..." />;
+    return (
+      <ScreenSafeArea>
+        <LoadingState label="Loading your filters..." />
+      </ScreenSafeArea>
+    );
   }
 
   if (loadError) {
-    return <ErrorState message={loadError} onRetry={handleRetry} />;
+    return (
+      <ScreenSafeArea>
+        <ErrorState message={loadError} onRetry={handleRetry} />
+      </ScreenSafeArea>
+    );
   }
 
   return (
-    <View style={{ backgroundColor: "#ffffff", flex: 1 }}>
+    <ScreenSafeArea>
       <Stack.Screen
         options={{
           gestureEnabled: !canUseWebViewBack,
-          title: "Instagram",
+          headerShown: false,
         }}
       />
       <WebView
@@ -512,6 +544,6 @@ export default function InstagramScreen() {
           </View>
         </View>
       </Modal>
-    </View>
+    </ScreenSafeArea>
   );
 }
