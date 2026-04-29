@@ -1,50 +1,27 @@
-# Welcome to your Expo app 👋
+# <img src="assets/images/icon32.png" alt="ZenFEntegrameed Logo" width="32"/> Entegram
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Entegram is an open source Expo app for using Instagram with fewer distractions.
 
-## Get started
+## What it does
 
-1. Install dependencies
+Entegram opens Instagram inside the app and lets you choose which distracting parts of the Instagram web experience should be hidden.
 
-   ```bash
-   npm install
-   ```
+Current filters include:
 
-2. Start the app
+- Hide Reels
+- Hide Explore
+- Hide Home Feed
+- Hide Suggestions
+- Hide Stories
 
-   ```bash
-   npx expo start
-   ```
+The app also includes a LockIn mode that can protect enabled filters behind a password, so they cannot be turned off casually.
 
-In the output, you'll find options to open the app in a
+## How It Works
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+Entegram uses a React Native WebView to load the Instagram web version. Based on the filters you enable, the app injects a small script into the page that hides or blocks selected Instagram UI elements.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+Filter settings are saved locally on the device. LockIn settings are also stored locally and are used to prevent protected filters from being disabled until they are unlocked.
 
-## Get a fresh project
+## Disclaimer
 
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Instagram updates its web version periodically, potentially breaking some functionality in Entegram. This project is not affiliated with Instagram or Meta.
