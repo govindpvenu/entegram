@@ -13,6 +13,7 @@ import {
   BackHandler,
   Modal,
   Pressable,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
@@ -23,6 +24,7 @@ import { useFilters } from "@/src/context/FilterContext";
 import { buildInstagramFilterScript } from "@/src/utils/buildInstagramFilterScript";
 
 const INSTAGRAM_URL = "https://www.instagram.com/";
+const INSTAGRAM_LOADING_BACKGROUND = "#05070b";
 const INSTAGRAM_STATUS_BAR_BACKGROUND = "#0b1020";
 const SHARED_REEL_LOCK_MESSAGE = "entegram.sharedReelLock";
 const WEBVIEW_NAVIGATION_MESSAGE = "entegram.webviewNavigation";
@@ -114,6 +116,17 @@ function LoadingState({ label }: { label: string }) {
     >
       <ActivityIndicator color="#111827" size="large" />
       <Text style={{ color: "#4b5563", fontSize: 14 }}>{label}</Text>
+    </View>
+  );
+}
+
+function InstagramLoadingState() {
+  return (
+    <View style={styles.webViewLoadingOverlay}>
+      <ActivityIndicator color="#f9fafb" size="large" />
+      <Text style={{ color: "#d1d5db", fontSize: 14 }}>
+        Loading Instagram...
+      </Text>
     </View>
   );
 }
@@ -225,7 +238,8 @@ export default function InstagramScreen() {
   const webViewNavigationRef =
     React.useRef<WebViewNavigationSnapshot>(webViewNavigation);
   const injectedScript = React.useMemo(
-    () => `${buildInstagramFilterScript(filters)}\n${WEBVIEW_NAVIGATION_SCRIPT}`,
+    () =>
+      `${buildInstagramFilterScript(filters)}\n${WEBVIEW_NAVIGATION_SCRIPT}`,
     [filters],
   );
   const canUseWebViewBack =
@@ -419,8 +433,7 @@ export default function InstagramScreen() {
                   typeof message.isInstagramHome === "boolean"
                     ? message.isInstagramHome
                     : undefined,
-                url:
-                  typeof message.url === "string" ? message.url : undefined,
+                url: typeof message.url === "string" ? message.url : undefined,
               });
             }
           } catch {
@@ -434,11 +447,12 @@ export default function InstagramScreen() {
             url: navigationState.url,
           });
         }}
-        renderLoading={() => <LoadingState label="Loading Instagram..." />}
+        renderLoading={() => <InstagramLoadingState />}
         scrollEnabled={!isSharedReelLocked}
         setSupportMultipleWindows={false}
         sharedCookiesEnabled
         source={{ uri: INSTAGRAM_URL }}
+        style={{ backgroundColor: INSTAGRAM_LOADING_BACKGROUND }}
         startInLoadingState
         thirdPartyCookiesEnabled
       />
@@ -547,3 +561,14 @@ export default function InstagramScreen() {
     </ScreenSafeArea>
   );
 }
+
+const styles = StyleSheet.create({
+  webViewLoadingOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    alignItems: "center",
+    backgroundColor: INSTAGRAM_LOADING_BACKGROUND,
+    gap: 12,
+    justifyContent: "center",
+    padding: 24,
+  },
+});
