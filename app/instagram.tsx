@@ -124,9 +124,7 @@ function InstagramLoadingState() {
   return (
     <View style={styles.webViewLoadingOverlay}>
       <ActivityIndicator color="#f9fafb" size="large" />
-      <Text style={{ color: "#d1d5db", fontSize: 14 }}>
-        Loading Instagram...
-      </Text>
+      <Text style={{ color: "#d1d5db", fontSize: 14 }}>Cooking...</Text>
     </View>
   );
 }
