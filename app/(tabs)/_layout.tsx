@@ -31,6 +31,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="filters"
         options={{
+          href: null,
           title: "Filters",
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="options-outline" size={size} />
@@ -40,6 +41,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="lock-in"
         options={{
+          href: null,
           title: "LockIn",
           tabBarIcon: ({ color, size }) => (
             <Ionicons color={color} name="lock-closed-outline" size={size} />
