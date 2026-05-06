@@ -19,7 +19,7 @@
     <td align="center"><strong>DMs</strong></td>
   </tr>
   <tr>
-    <td><img src="assets/images/github-assets/preview.gif" alt="Entegram filter settings preview" width="260" /></td>
+    <td><img src="assets/images/github-assets/preview.gif" alt="Entegram filter settings preview" width="288" /></td>
     <td><img src="assets/images/github-assets/preview-home.webp" alt="Entegram home feed preview" width="260" /></td>
     <td><img src="assets/images/github-assets/preview-dm.webp" alt="Entegram direct messages preview" width="260" /></td>
   </tr>
