@@ -12,7 +12,18 @@
 
 [Download APK](https://github.com/govindpvenu/entegram/releases/latest/download/app.apk) · [Contribute](https://github.com/govindpvenu/entegram/fork) · [Report a Bug](https://github.com/govindpvenu/entegram/issues/new)
 
-<img src="assets/images/preview.gif" alt="Entegram app preview" width="432" />
+<table>
+  <tr>
+    <td align="center"><strong>Filters</strong></td>
+    <td align="center"><strong>Home</strong></td>
+    <td align="center"><strong>DMs</strong></td>
+  </tr>
+  <tr>
+    <td><img src="assets/images/github-assets/preview.gif" alt="Entegram filter settings preview" width="260" /></td>
+    <td><img src="assets/images/github-assets/preview-home.webp" alt="Entegram home feed preview" width="260" /></td>
+    <td><img src="assets/images/github-assets/preview-dm.webp" alt="Entegram direct messages preview" width="260" /></td>
+  </tr>
+</table>
 
 </div>
 
