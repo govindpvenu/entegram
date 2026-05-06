@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/images/adaptive-icon.png" alt="Entegram" width="96" height="96" style="border-radius:25%; border:4px " />
+<img src="assets/images/icon-circle.png" alt="Entegram" width="96" height="96" style="border-radius:25%; border:4px " />
 
 # Entegram
 
