@@ -4,7 +4,7 @@
 
 # Entegram
 
-**Instagram without distractions**
+**Stay Connected,without the noise.**
 
 <a href='https://github.com/govindpvenu/entegram/releases/latest' title='Download Entegram'>
 <img src="https://raw.githubusercontent.com/rubenpgrady/get-it-on-github/refs/heads/main/get-it-on-github.png" alt="Get it on GitHub" height="72" />
@@ -12,9 +12,16 @@
 
 [Download APK](https://github.com/govindpvenu/entegram/releases/latest/download/app.apk) · [Contribute](https://github.com/govindpvenu/entegram/fork) · [Report a Bug](https://github.com/govindpvenu/entegram/issues/new)
 
-</div>
+<video
+  src="assets/images/preview.mp4"
+  width="300"
+  autoplay
+  muted
+  loop
+  playsinline>
+</video>
 
----
+</div>
 
 Entegram is an open source Expo app for using Instagram with fewer distractions.
 
