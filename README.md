@@ -10,7 +10,7 @@
 <img src="https://raw.githubusercontent.com/rubenpgrady/get-it-on-github/refs/heads/main/get-it-on-github.png" alt="Get it on GitHub" height="72" />
 </a>
 
-[Download APK](https://github.com/govindpvenu/entegram/releases/latest/download/app.apk) · [Contribute](https://github.com/govindpvenu/entegram/fork) · [Report a Bug](https://github.com/govindpvenu/entegram/issues/new)
+[Download APK](https://github.com/govindpvenu/entegram/releases/latest/download/Entegram.apk) · [Contribute](https://github.com/govindpvenu/entegram/fork) · [Report a Bug](https://github.com/govindpvenu/entegram/issues/new)
 
 <table>
   <tr>
