@@ -12,7 +12,7 @@
 
 [Download APK](https://github.com/govindpvenu/entegram/releases/latest/download/app.apk) · [Contribute](https://github.com/govindpvenu/entegram/fork) · [Report a Bug](https://github.com/govindpvenu/entegram/issues/new)
 
-<img src="assets/images/preview.gif" alt="Entegram app preview" width="300" />
+<img src="assets/images/preview.gif" alt="Entegram app preview" width="432" />
 
 </div>
 
