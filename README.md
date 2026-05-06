@@ -1,4 +1,20 @@
-# <img src="assets/images/icon32.png" alt="ZenFEntegrameed Logo" width="32"/> Entegram
+<div align="center">
+
+<img src="assets/images/adaptive-icon.png" alt="Entegram" width="96" height="96" style="border-radius:25%; border:4px " />
+
+# Entegram
+
+**Instagram without distractions**
+
+<a href='https://github.com/govindpvenu/entegram/releases/latest' title='Download Entegram'>
+<img src="https://raw.githubusercontent.com/rubenpgrady/get-it-on-github/refs/heads/main/get-it-on-github.png" alt="Get it on GitHub" height="72" />
+</a>
+
+[Download APK](https://github.com/govindpvenu/entegram/releases/latest/download/app.apk) · [Contribute](https://github.com/govindpvenu/entegram/fork) · [Report a Bug](https://github.com/govindpvenu/entegram/issues/new)
+
+</div>
+
+---
 
 Entegram is an open source Expo app for using Instagram with fewer distractions.
 
