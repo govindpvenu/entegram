@@ -12,14 +12,7 @@
 
 [Download APK](https://github.com/govindpvenu/entegram/releases/latest/download/app.apk) · [Contribute](https://github.com/govindpvenu/entegram/fork) · [Report a Bug](https://github.com/govindpvenu/entegram/issues/new)
 
-<video
-  src="assets/images/preview.mp4"
-  width="300"
-  autoplay
-  muted
-  loop
-  playsinline>
-</video>
+<img src="assets/images/preview.gif" alt="Entegram app preview" width="300" />
 
 </div>
 
